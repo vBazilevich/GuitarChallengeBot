@@ -1,5 +1,5 @@
 # GuitarChallengeBot
-## Project desctiption
+## Project description
 This bot sends a piece of music in form of scores to all users every day.
 
 User can submit his or her performance in form of audio or video message.
@@ -11,4 +11,5 @@ All development documentation can be found [here](https://drive.google.com/drive
 
 ## Authors
 Vladimir Bazilevich
+
 Vladimir Bliznyukov
