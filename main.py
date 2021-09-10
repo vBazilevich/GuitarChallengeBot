@@ -1,5 +1,5 @@
 import asyncio
-from bot import DailyGuitarBot
+from bot.bot import DailyGuitarBot
 import aiogram
 import os
 import logging

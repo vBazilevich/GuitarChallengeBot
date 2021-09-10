@@ -1,9 +1,13 @@
+from bot.Schedule import Schedule, WrongScheduleFormat
+from bot.MissingTokenError import MissingTokenError
 import aiogram
 import logging
 
 class DailyGuitarBot:
     schedule_storage = dict()
     def __init__(self, token):
+        if token is None:
+            raise MissingTokenError("Telegram API token passed to bot class is None")
         self.bot = aiogram.Bot(token)
         self.dispatcher = aiogram.Dispatcher(self.bot)
 
@@ -25,34 +29,12 @@ class DailyGuitarBot:
         @self.dispatcher.message_handler(commands=["set_schedule"])
         async def set_schedule(message: aiogram.types.Message):
             try:
-                timezone, start, end = self.parse_schedule(message.get_args())
-                self.schedule_storage[message.from_user.id] = {"start" : start - timezone, "end" : end - timezone}
+                schedule = Schedule(message.get_args())
+                self.schedule_storage[message.from_user.id] = schedule
                 logging.debug(f"Registered new schedule: {self.schedule_storage[message.from_user.id]}")
-                await message.answer("You schedule was updated")
-            except ValueError as e:
+                await message.answer(f"You schedule was updated. Your current schedule is: {schedule}")
+            except Exception as e:
                 await message.answer(str(e))
-
-    def parse_schedule(self, schedule: str):
-        try:
-            timezone, begin, end = schedule.split(" ", maxsplit = 2)
-        except:
-            raise ValueError("Wrong schedule format. Expected format: UTC<UTC zone> <start hour> <end hour>")
-        timezone = int(timezone.removeprefix("UTC"))
-        if abs(timezone) > 12:
-            raise ValueError("Invalid timezone")
-        try:
-            begin = int(begin)
-        except ValueError:
-            raise ValueError("Start time can not be represented as integer")
-        try:
-            end = int(end)
-        except ValueError:
-            raise ValueError("End time can not be represented as integer")
-
-
-        if begin >= end:
-            raise ValueError("Start time is bigger than end time")
-        return timezone, begin, end
 
     # Starts bot
     async def start(self):
