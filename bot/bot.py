@@ -36,6 +36,14 @@ class DailyGuitarBot:
             except Exception as e:
                 await message.answer(str(e))
 
+        @self.dispatcher.message_handler(commands=["my_schedule"])
+        async def my_schedule(message: aiogram.types.Message):
+            try:
+                schedule = self.schedule_storage[message.from_user.id]
+                await message.answer(f"Your current schedule is: {schedule}")
+            except KeyError:
+                await message.answer("You have not chosen your schedule. Please, use /set_schedule commant to configure it.")
+
     # Starts bot
     async def start(self):
         logging.info("Starting bot...")

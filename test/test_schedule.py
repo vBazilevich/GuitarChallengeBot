@@ -26,3 +26,7 @@ class TestSchedule:
         with pytest.raises(ValueError, match = "Invalid timezone*"):
             schedule = "UTC-13 7 15"
             schedule = Schedule(schedule)
+
+    def test_panics_on_empty_text(self):
+        with pytest.raises(WrongScheduleFormat):
+            schedule = Schedule("")

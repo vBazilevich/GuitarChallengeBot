@@ -1,19 +1,24 @@
 class WrongScheduleFormat(Exception):
     def __init__(self):
         self.message = "Invalid schedule format. Expected format: UTC<UTC time zone> <start> <end>. Start and end are hour in 24 hours format"
+        super().__init__(self.message)
 
 class StartAfterEndError(Exception):
     def __init__(self):
         self.message = "Looks like you are starting your practice after you finish it"
+        super().__init__(self.message)
 
 class HoursOutOfRangeError(Exception):
     def __init__(self, hours):
         self.message = f"Hours out of the range: {hours}"
+        super().__init__(self.message)
 
 # Works with schedule in format
 # UTC<UTC time zone> <start> <end>
 class Schedule:
     def __init__(self, schedule: str):
+        if not schedule:
+            raise WrongScheduleFormat
         if not schedule.startswith("UTC"):
             raise WrongScheduleFormat
 
