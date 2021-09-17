@@ -11,7 +11,7 @@ class LevelDoesNotExistError(Exception):
 
 
 class ImagesStorage:
-    def __init__(self, mongodb_link, local_storage = "images/"):
+    def __init__(self, mongodb_link, local_storage="images/"):
         if not mongodb_link:
             raise ValueError("MongoDB link is not provided")
         self.client = pymongo.MongoClient(mongodb_link)
@@ -33,6 +33,8 @@ class ImagesStorage:
             raise LevelDoesNotExistError
         image_content = image["content"]
         image_filename = image["filename"]
+        if not os.path.exists(self.local_storage):
+            os.mkdir(self.local_storage)
         with open(self.local_storage + image_filename, "wb") as file:
             file.write(image_content)
         self.images_cache[identifier] = image_filename
