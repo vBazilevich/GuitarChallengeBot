@@ -5,4 +5,4 @@ import pytest
 class TestBot:
     def test_panics_without_token(self):
         with pytest.raises(MissingTokenError):
-            bot = DailyGuitarBot(None)
+            bot = DailyGuitarBot(None, None)
