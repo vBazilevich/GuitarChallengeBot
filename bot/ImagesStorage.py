@@ -38,4 +38,4 @@ class ImagesStorage:
         with open(self.local_storage + image_filename, "wb") as file:
             file.write(image_content)
         self.images_cache[identifier] = image_filename
-        return InputFile(image_filename)
+        return InputFile(self.local_storage + image_filename)

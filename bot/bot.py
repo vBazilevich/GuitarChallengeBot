@@ -88,6 +88,15 @@ class DailyGuitarBot:
                         self.admin_id,
                         "One user passed all levels.",
                     )
+        
+        @self.dispatcher.message_handler(commands=["reset"])
+        async def reset(message: aiogram.types.Message):
+            user_id = message.from_user.id
+            try:
+                self.user_storage[user_id]["level"] = 1
+                await message.answer("Progress resetted successfully")
+            except KeyError:
+                await message.answer("Can't reset progress for unregistered user")
 
     # Starts bot
     async def start(self):
