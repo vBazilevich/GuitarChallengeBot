@@ -7,6 +7,7 @@ import sys
 
 logging.basicConfig(level=logging.INFO)
 
+
 async def main():
     TELEGRAM_API_TOKEN = os.getenv("TELEGRAM_API_TOKEN")
     if TELEGRAM_API_TOKEN is None:
@@ -22,7 +23,7 @@ async def main():
     ADMIN_ID = os.getenv("ADMIN_ID")
     if ADMIN_ID is None:
         logging.warn(
-                "Environment variable ADMIN_ID is missing. All errors will be logged"
+          "Environment variable ADMIN_ID is missing. All errors will be logged"
         )
 
     bot = DailyGuitarBot(TELEGRAM_API_TOKEN, images_storage)

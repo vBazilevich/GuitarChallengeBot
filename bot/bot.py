@@ -10,7 +10,7 @@ class DailyGuitarBot:
     schedule_storage = {}
     user_storage = {}
 
-    def __init__(self, token, images_storage : ImagesStorage):
+    def __init__(self, token, images_storage: ImagesStorage):
         if token is None:
             raise MissingTokenError("Telegram API token passed "
                                     "to bot class is None")

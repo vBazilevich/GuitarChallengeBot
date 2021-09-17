@@ -1,5 +1,7 @@
-from bot.Schedule import HoursOutOfRangeError, Schedule, StartAfterEndError, WrongScheduleFormat
+from bot.Schedule import (HoursOutOfRangeError, Schedule,
+                          StartAfterEndError, WrongScheduleFormat)
 import pytest
+
 
 class TestSchedule:
     def test_requires_UTC_prefix(self):
@@ -23,7 +25,7 @@ class TestSchedule:
             schedule = Schedule(schedule)
 
     def test_panics_on_wrong_timezone(self):
-        with pytest.raises(ValueError, match = "Invalid timezone*"):
+        with pytest.raises(ValueError, match="Invalid timezone*"):
             schedule = "UTC-13 7 15"
             schedule = Schedule(schedule)
 
