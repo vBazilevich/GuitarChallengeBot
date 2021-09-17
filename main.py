@@ -1,7 +1,6 @@
 import asyncio
 from bot.bot import DailyGuitarBot
 from bot.ImagesStorage import ImagesStorage
-import aiogram
 import os
 import logging
 import sys

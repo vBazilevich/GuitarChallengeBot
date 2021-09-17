@@ -1,4 +1,4 @@
-from bot.Schedule import Schedule, WrongScheduleFormat
+from bot.Schedule import Schedule
 from bot.MissingTokenError import MissingTokenError
 from bot.ImagesStorage import ImagesStorage, LevelDoesNotExistError
 import aiogram
@@ -47,10 +47,11 @@ class DailyGuitarBot:
             try:
                 schedule = Schedule(message.get_args())
                 self.schedule_storage[message.from_user.id] = schedule
-                logging.debug(f"Registered new schedule: "
-                              "{self.schedule_storage[message.from_user.id]}")
-                await message.answer(f"You schedule was updated. "
-                                     "Your current schedule is: {schedule}")
+                logging.debug("Registered new schedule: {schedule}")
+                await message.answer(
+                    "You schedule was updated. "
+                    f"Your current schedule is: {schedule}"
+                )
             except Exception as e:
                 await message.answer(str(e))
 
