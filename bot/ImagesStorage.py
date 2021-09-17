@@ -10,10 +10,16 @@ class LevelDoesNotExistError(Exception):
         super().__init__(self.message)
 
 
+class MissingMongoDBToken(Exception):
+    def __init__(self):
+        self.message = "No MongoDB URL provided"
+        super().__init__(self.message)
+
+
 class ImagesStorage:
     def __init__(self, mongodb_link, local_storage="images/"):
         if not mongodb_link:
-            raise ValueError("MongoDB link is not provided")
+            raise MissingMongoDBToken
         self.client = pymongo.MongoClient(mongodb_link)
         self.database = self.client["images-storage"]
         self.images = self.database['images']
