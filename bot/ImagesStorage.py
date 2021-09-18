@@ -43,7 +43,7 @@ class ImagesStorage:
         image_content = image["content"]
         image_filename = image["filename"]
         if not os.path.exists(self.local_storage):
-            os.mkdir(self.local_storage)
+            os.makedirs(self.local_storage)
         with open(self.local_storage + image_filename, "wb") as file:
             file.write(image_content)
         self.images_cache[identifier] = image_filename
