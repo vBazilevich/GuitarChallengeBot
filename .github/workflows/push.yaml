@@ -29,8 +29,9 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Test with pytest
         run: |
-          python -m pytest --cov=bot test/ > pytest-coverage.txt
-      - name: Comment coverage
-        uses: coroo/pytest-coverage-commentator@v1.0.2
+          python -m pytest --cov=bot --cov-report=xml test/ > pytest-coverage.txt
+      - name: "Upload coverage to Codecov"
+        uses: codecov/codecov-action@v2
         with:
-          pytest-coverage: pytest-coverage.txt
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
