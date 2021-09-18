@@ -1,4 +1,6 @@
 # GuitarChallengeBot
+[![codecov](https://codecov.io/gh/vBazilevich/GuitarChallengeBot/branch/master/graph/badge.svg?token=5IGPWEISYZ)](https://codecov.io/gh/vBazilevich/GuitarChallengeBot)
+
 ## Project description
 This bot sends a piece of music in form of scores to all users every day.
 
