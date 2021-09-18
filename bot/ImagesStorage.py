@@ -10,17 +10,17 @@ class LevelDoesNotExistError(Exception):
         super().__init__(self.message)
 
 
-class MissingMongoDBToken(Exception):
+class MissingMongoDBClient(Exception):
     def __init__(self):
-        self.message = "No MongoDB URL provided"
+        self.message = "No MongoDB client provided"
         super().__init__(self.message)
 
 
 class ImagesStorage:
-    def __init__(self, mongodb_link, local_storage="images/"):
-        if not mongodb_link:
-            raise MissingMongoDBToken
-        self.client = pymongo.MongoClient(mongodb_link)
+    def __init__(self, mongodb: pymongo.MongoClient, local_storage="images/"):
+        if not mongodb:
+            raise MissingMongoDBClient
+        self.client = mongodb
         self.database = self.client["images-storage"]
         self.images = self.database['images']
         self.images_cache = {}
@@ -34,7 +34,10 @@ class ImagesStorage:
             if os.path.exists(filename):
                 return InputFile(filename)
 
-        image = self.images.find_one({"identifier": identifier})
+        database = self.client["images-storage"]
+        images = database['images']
+
+        image = images.find_one({"identifier": identifier})
         if not image:
             raise LevelDoesNotExistError
         image_content = image["content"]

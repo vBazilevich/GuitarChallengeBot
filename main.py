@@ -1,9 +1,10 @@
 import asyncio
-from bot.bot import DailyGuitarBot
-from bot.ImagesStorage import ImagesStorage
 import os
 import logging
 import sys
+import pymongo
+from bot.bot import DailyGuitarBot
+from bot.ImagesStorage import ImagesStorage
 
 logging.basicConfig(level=logging.INFO)
 
@@ -18,7 +19,14 @@ async def main():
     if MONGO_URL is None:
         logging.error("Environment variable MONGO_URL is not defined")
         sys.exit(-1)
-    images_storage = ImagesStorage(MONGO_URL)
+    mongo_db = pymongo.MongoClient(MONGO_URL, connect=True)
+    # Check that connection was established
+    try:
+        mongo_db.admin.command('ping')
+    except pymongo.errors.ConnectionFailure:
+        logging.error("Can not establish connection with MongoDB")
+        sys.exit(-1)
+    images_storage = ImagesStorage(mongo_db)
 
     ADMIN_ID = os.getenv("ADMIN_ID")
     if ADMIN_ID is None:
