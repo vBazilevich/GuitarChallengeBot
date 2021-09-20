@@ -21,16 +21,15 @@ CREATE FUNCTION create_user(
 CREATE FUNCTION create_song(
 	arg_name character varying,
 	arg_author character varying,
-	arg_descr character varying,
-	arg_image_link character varying
+	arg_descr character varying
     )
 	RETURNS BOOLEAN
 	LANGUAGE plpgsql
 	AS
 	$$
 	BEGIN
-	INSERT INTO song (song_id, name, author, descr, image_link)
-    	VALUES (DEFAULT, arg_name, arg_author, arg_descr, arg_image_link);
+	INSERT INTO song (song_id, name, author, descr)
+    	VALUES (DEFAULT, arg_name, arg_author, arg_descr);
 	RETURN TRUE;
 	END;
 	$$;
@@ -94,23 +93,6 @@ CREATE FUNCTION update_user_level(
 		UPDATE bot_user SET level = level + 1 
 		WHERE user_id = arg_user_id;
 		RETURN TRUE;
-	END;
-	$$;
-
-CREATE FUNCTION get_image_link(
-	arg_user_id integer
-    )
-	RETURNS CHARACTER VARYING
-	LANGUAGE plpgsql
-	AS
-	$$
-	DECLARE return_link character varying;
-	BEGIN
-		SELECT image_link
-		INTO return_link
-		FROM song 
-		WHERE (SELECT level FROM bot_user WHERE user_id = arg_user_id ) = song.song_id;
-		RETURN return_link;
 	END;
 	$$;
 
