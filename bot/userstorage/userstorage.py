@@ -1,7 +1,7 @@
 import logging
 import psycopg2
-from bot.userstorage.missingdatabaseurlerror import MissingUserDatabaseURLError
-from bot.userstorage.updatingnonexistingusererror import UpdatingNonExistingUserError
+from bot.userstorage import MissingUserDatabaseURLError
+from bot.userstorage import UpdatingNonExistingUserError
 from bot.Schedule import Schedule
 
 
@@ -13,7 +13,7 @@ class UserStorage:
         self.conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
         self.cursor = self.conn.cursor()
 
-    def create_user(self, user_id: int):
+    def test_create_user(self, user_id: int):
         self.cursor.callproc('create_user', [user_id, 1, "active", 0, 10, 18,])
         self.cursor.fetchone()
 
@@ -30,5 +30,6 @@ class UserStorage:
             raise UpdatingNonExistingUserError(user_id)
 
     def __del__(self):
-        self.cursor.close()
+        if self.cursor:
+            self.cursor.close()
         self.conn.close()
