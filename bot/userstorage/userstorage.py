@@ -1,6 +1,7 @@
-import psycopg2
 import logging
+import psycopg2
 from bot.userstorage.missingdatabaseurlerror import MissingUserDatabaseURLError
+from bot.userstorage.updatingnonexistingusererror import UpdatingNonExistingUserError
 from bot.Schedule import Schedule
 
 
@@ -14,7 +15,7 @@ class UserStorage:
 
     def create_user(self, user_id: int):
         self.cursor.callproc('create_user', [user_id, 1, "active", 0, 10, 18,])
-        status = self.cursor.fetchone()
+        self.cursor.fetchone()
 
     def user_exists(self, user_id: int):
         self.cursor.callproc('user_exists', [user_id])
@@ -26,7 +27,7 @@ class UserStorage:
         if self.user_exists(user_id):
             schedule.update(user_id, self.cursor)
         else:
-            raise UpdaitingNonExistingUserError
+            raise UpdatingNonExistingUserError(user_id)
 
     def __del__(self):
         self.cursor.close()
