@@ -1,4 +1,5 @@
 import psycopg2
+import logging
 from bot.userstorage.missingdatabaseurlerror import MissingUserDatabaseURLError
 
 
@@ -7,12 +8,19 @@ class UserStorage:
         if not db_url:
             raise MissingUserDatabaseURLError
         self.conn = psycopg2.connect(db_url)
+        self.conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
         self.cursor = self.conn.cursor()
 
     def create_user(self, user_id: int):
-        self.cursor.callproc('create_user', [user_id, 1, True, None, None, None])
-        self.conn.commit()
+        self.cursor.callproc('create_user', [user_id, 1, "active", 0, 10, 18,])
+        status = self.cursor.fetchone()
 
     def user_exists(self, user_id: int):
         self.cursor.callproc('user_exists', [user_id])
-        return self.cursor.fetchone()
+        result = self.cursor.fetchone()[0]
+        logging.debug(f"user_exists({user_id}) = {result}")
+        return result
+
+    def __del__(self):
+        self.cursor.close()
+        self.conn.close()
