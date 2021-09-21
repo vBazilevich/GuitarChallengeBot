@@ -1,3 +1,6 @@
+import psycopg2
+
+
 class WrongScheduleFormat(Exception):
     def __init__(self):
         self.message = ("Invalid schedule format. Expected format: "
@@ -61,4 +64,7 @@ class Schedule:
 
     def __str__(self):
         return (f"Starting at {self.begin + self.timezone}. "
-                "Finishing at {self.end + self.timezone}")
+                f"Finishing at {self.end + self.timezone}.")
+
+    def update(self, user_id, cursor: psycopg2.extensions.cursor):
+        cursor.callproc('update_user_time', [user_id, self.timezone, self.begin, self.end,])

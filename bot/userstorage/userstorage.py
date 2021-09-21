@@ -1,6 +1,7 @@
 import psycopg2
 import logging
 from bot.userstorage.missingdatabaseurlerror import MissingUserDatabaseURLError
+from bot.Schedule import Schedule
 
 
 class UserStorage:
@@ -20,6 +21,12 @@ class UserStorage:
         result = self.cursor.fetchone()[0]
         logging.debug(f"user_exists({user_id}) = {result}")
         return result
+
+    def update_user_schedule(self, user_id: int, schedule: Schedule):
+        if self.user_exists(user_id):
+            schedule.update(user_id, self.cursor)
+        else:
+            raise UpdaitingNonExistingUserError
 
     def __del__(self):
         self.cursor.close()
