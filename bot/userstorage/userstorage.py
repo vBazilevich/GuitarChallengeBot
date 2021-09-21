@@ -6,16 +6,16 @@ from bot.Schedule import Schedule
 
 
 class UserStorage:
-    conn = None
-    cursor = None
     def __init__(self, db_url):
+        self.conn = None
+        self.cursor = None
         if not db_url:
             raise MissingUserDatabaseURLError
         self.conn = psycopg2.connect(db_url)
         self.conn.set_isolation_level(psycopg2.extensions.ISOLATION_LEVEL_AUTOCOMMIT)
         self.cursor = self.conn.cursor()
 
-    def test_create_user(self, user_id: int):
+    def create_user(self, user_id: int):
         self.cursor.callproc('create_user', [user_id, 1, "active", 0, 10, 18,])
         self.cursor.fetchone()
 

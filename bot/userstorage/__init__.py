@@ -1,3 +1,3 @@
-from .missingdatabaseurlerror import *
-from .updatingnonexistingusererror import *
+from .missingdatabaseurlerror import MissingUserDatabaseURLError
+from .updatingnonexistingusererror import UpdatingNonExistingUserError
 from .userstorage import UserStorage
