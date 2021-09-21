@@ -6,6 +6,8 @@ from bot.Schedule import Schedule
 
 
 class UserStorage:
+    conn = None
+    cursor = None
     def __init__(self, db_url):
         if not db_url:
             raise MissingUserDatabaseURLError
@@ -32,4 +34,5 @@ class UserStorage:
     def __del__(self):
         if self.cursor:
             self.cursor.close()
-        self.conn.close()
+        if self.conn:
+            self.conn.close()
