@@ -1,3 +1,4 @@
+from bot.userstorage.userstorage import UserStorage
 from bot.Schedule import Schedule
 from bot.MissingTokenError import MissingTokenError
 from bot.ImagesStorage import ImagesStorage, LevelDoesNotExistError
@@ -8,15 +9,15 @@ import os
 
 class DailyGuitarBot:
     schedule_storage = {}
-    user_storage = {}
 
-    def __init__(self, token, images_storage: ImagesStorage):
+    def __init__(self, token, images_storage: ImagesStorage, user_storage: UserStorage):
         if token is None:
             raise MissingTokenError("Telegram API token passed "
                                     "to bot class is None")
         self.bot = aiogram.Bot(token)
         self.dispatcher = aiogram.Dispatcher(self.bot)
         self.images_storage = images_storage
+        self.user_storage = user_storage
         self.admin_id = os.getenv("ADMIN_ID")
 
         @self.dispatcher.message_handler(commands=["start", "help"])
@@ -24,8 +25,8 @@ class DailyGuitarBot:
             bot_name = (await self.bot.get_me()).full_name
             user_name = message.from_user.full_name
             user_id = message.from_user.id
-            if user_id not in self.user_storage.keys():
-                self.user_storage[user_id] = {"level": 1}
+            if not self.user_storage.user_exists(user_id):
+                self.user_storage.create_user(user_id)
             await message.answer(
                 f"Hello, {user_name}! My name is {bot_name}.\n\n"
                 "Right now I can't do many things but very soon "
@@ -46,7 +47,8 @@ class DailyGuitarBot:
         async def set_schedule(message: aiogram.types.Message):
             try:
                 schedule = Schedule(message.get_args())
-                self.schedule_storage[message.from_user.id] = schedule
+                user_id = message.from_user.id
+                self.user_storage.update_user_schedule(user_id, schedule)
                 logging.debug("Registered new schedule: {schedule}")
                 await message.answer(
                     "You schedule was updated. "

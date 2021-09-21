@@ -1,4 +1,5 @@
 import asyncio
+from bot.userstorage.userstorage import UserStorage
 import os
 import logging
 import sys
@@ -34,7 +35,14 @@ async def main():
           "Environment variable ADMIN_ID is missing. All errors will be logged"
         )
 
-    bot = DailyGuitarBot(TELEGRAM_API_TOKEN, images_storage)
+    # Create UserStorage
+    DATABASE_URL = os.getenv("DATABASE_URL")
+    if DATABASE_URL is None:
+        logging.error("PostgreSQL database was not provided")
+        sys.exit(-1)
+    user_storage = UserStorage(DATABASE_URL)
+
+    bot = DailyGuitarBot(TELEGRAM_API_TOKEN, images_storage, user_storage)
 
     await bot.start()
 
