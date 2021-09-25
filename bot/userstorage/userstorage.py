@@ -45,6 +45,13 @@ class UserStorage:
         else:
             raise UpdatingNonExistingUserError(user_id)
 
+    def reset_user_progress(self, user_id: int):
+        if self.user_exists(user_id):
+            self.cursor.callproc('reset_user_progress', [user_id])
+            self.cursor.fetchone()
+        else:
+            raise UpdatingNonExistingUserError(user_id)
+
     def __del__(self):
         if self.cursor:
             self.cursor.close()
