@@ -96,7 +96,7 @@ class DailyGuitarBot:
         async def reset(message: aiogram.types.Message):
             user_id = message.from_user.id
             try:
-                self.user_storage[user_id]["level"] = 1
+                self.user_storage.reset_user_progress(user_id)
                 await message.answer("Progress resetted successfully")
             except KeyError:
                 await message.answer("Can't reset progress for unregistered user")
