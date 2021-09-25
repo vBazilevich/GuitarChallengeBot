@@ -113,6 +113,21 @@ CREATE FUNCTION update_user_level(
 	END;
 	$$;
 
+CREATE OR REPLACE FUNCTION reset_user_progress(
+    arg_user_id integer
+    )
+    RETURNS BOOLEAN
+    LANGUAGE plpgsql
+    AS
+    $$
+    BEGIN
+        UPDATE bot_user SET level = 1
+        WHERE user_id = arg_user_id;
+        RETURN TRUE;
+    END;
+    $$;
+
+
 CREATE FUNCTION create_feedback_record(
 	arg_author_id integer,
 	arg_assessor_id integer
