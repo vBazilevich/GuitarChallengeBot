@@ -82,6 +82,23 @@ CREATE FUNCTION update_user_time(
 	END;
 	$$;
 
+CREATE OR REPLACE FUNCTION fetch_user_level(
+    arg_user_id integer
+    )
+    RETURNS INTEGER
+    LANGUAGE plpgsql
+    AS
+    $$
+    DECLARE user_level integer;
+    BEGIN
+        SELECT user_id
+        INTO user_level
+        FROM bot_user
+        WHERE user_id = arg_user_id;
+        RETURN user_level;
+    END;
+    $$;
+
 CREATE FUNCTION update_user_level(
 	arg_user_id integer
     )
