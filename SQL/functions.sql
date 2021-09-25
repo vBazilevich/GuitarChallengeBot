@@ -91,7 +91,7 @@ CREATE OR REPLACE FUNCTION fetch_user_level(
     $$
     DECLARE user_level integer;
     BEGIN
-        SELECT user_id
+        SELECT level
         INTO user_level
         FROM bot_user
         WHERE user_id = arg_user_id;

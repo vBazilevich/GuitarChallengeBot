@@ -1,3 +1,4 @@
+from bot.userstorage.updatingnonexistingusererror import UpdatingNonExistingUserError
 from bot.userstorage.userstorage import UserStorage
 from bot.Schedule import Schedule
 from bot.MissingTokenError import MissingTokenError
@@ -72,13 +73,13 @@ class DailyGuitarBot:
         async def next(message: aiogram.types.Message):
             user_id = message.from_user.id
             try:
-                user_info = self.user_storage[user_id]
-                current_level = user_info["level"]
+                current_level = self.user_storage.get_user_level(user_id)[0]
+                logging.debug(f"UID: {user_id} LEVEL: {current_level}")
                 image = self.images_storage.level(current_level)
                 await message.reply_photo(image)
-                self.user_storage[user_id]["level"] += 1
+                self.user_storage.update_user_level(user_id)
 
-            except KeyError:
+            except UpdatingNonExistingUserError:
                 await message.answer(
                     "You are not registered. Please, use /start command first"
                 )

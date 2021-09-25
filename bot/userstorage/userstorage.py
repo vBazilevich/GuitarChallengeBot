@@ -31,6 +31,20 @@ class UserStorage:
         else:
             raise UpdatingNonExistingUserError(user_id)
 
+    def get_user_level(self, user_id: int):
+        if self.user_exists(user_id):
+            self.cursor.callproc('fetch_user_level', [user_id])
+            return self.cursor.fetchone()
+        else:
+            raise UpdatingNonExistingUserError(user_id)
+
+    def update_user_level(self, user_id: int):
+        if self.user_exists(user_id):
+            self.cursor.callproc('update_user_level', [user_id])
+            self.cursor.fetchone()
+        else:
+            raise UpdatingNonExistingUserError(user_id)
+
     def __del__(self):
         if self.cursor:
             self.cursor.close()
