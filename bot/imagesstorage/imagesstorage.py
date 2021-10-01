@@ -1,19 +1,8 @@
 import os
 import pymongo
 from aiogram.types.input_file import InputFile
-
-
-class LevelDoesNotExistError(Exception):
-    def __init__(self):
-        self.message = ("Sorry, we have runned out of levels. "
-                        "We will add more levels soon:)")
-        super().__init__(self.message)
-
-
-class MissingMongoDBClient(Exception):
-    def __init__(self):
-        self.message = "No MongoDB client provided"
-        super().__init__(self.message)
+from bot.imagesstorage import MissingMongoDBClient
+from bot.imagesstorage import LevelDoesNotExistError
 
 
 class ImagesStorage:

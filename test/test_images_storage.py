@@ -1,6 +1,6 @@
 import pytest
 import os
-from bot.ImagesStorage import ImagesStorage, LevelDoesNotExistError, MissingMongoDBClient
+from bot.imagesstorage import ImagesStorage, LevelDoesNotExistError, MissingMongoDBClient
 
 class MockCollection:
     def __init__(self, data):

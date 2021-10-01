@@ -5,7 +5,7 @@ from bot.userstorage.updatingnonexistingusererror import UpdatingNonExistingUser
 from bot.userstorage.userstorage import UserStorage
 from bot.Schedule import Schedule
 from bot.MissingTokenError import MissingTokenError
-from bot.ImagesStorage import ImagesStorage, LevelDoesNotExistError
+from bot.imagesstorage import ImagesStorage, LevelDoesNotExistError
 
 
 class DailyGuitarBot:
