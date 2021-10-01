@@ -51,7 +51,7 @@ class DailyGuitarBot:
 
     async def set_schedule(self, message: aiogram.types.Message):
         try:
-            schedule = Schedule(message.get_args())
+            schedule = Schedule.from_string(message.get_args())
             user_id = message.from_user.id
             self.user_storage.update_user_schedule(user_id, schedule)
             logging.debug("Registered new schedule: {schedule}")

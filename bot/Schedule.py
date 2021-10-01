@@ -25,7 +25,21 @@ class HoursOutOfRangeError(Exception):
 # Works with schedule in format
 # UTC<UTC time zone> <start> <end>
 class Schedule:
-    def __init__(self, schedule: str):
+    def __init__(self, timezone: int, begin: int, end: int):
+        self.timezone = timezone
+        if not 0 <= begin <= 24:
+            raise HoursOutOfRangeError(begin)
+        if not 0 <= end <= 24:
+            raise HoursOutOfRangeError(end)
+        if not self.__valid_timezone():
+            raise ValueError(f"Invalid timezone: {self.timezone}")
+        self.begin = begin - self.timezone
+        self.end = end - self.timezone
+        if self.begin >= self.end:
+            raise StartAfterEndError
+
+    @staticmethod
+    def from_string(schedule : str):
         if not schedule:
             raise WrongScheduleFormat
         if not schedule.startswith("UTC"):
@@ -37,30 +51,22 @@ class Schedule:
         except Exception:
             raise WrongScheduleFormat
         timezone = timezone.removeprefix("UTC")
-        self.__parse_timezone(timezone)
-        self.begin = self.__parse_hour(begin) - self.timezone
-        self.end = self.__parse_hour(end) - self.timezone
-        if self.begin >= self.end:
-            raise StartAfterEndError
-
-    def __parse_timezone(self, timezone):
         try:
-            self.timezone = int(timezone)
+            timezone = int(timezone)
         except Exception:
             raise ValueError(f"Invalid timezone: {timezone}")
-        if not -12 <= self.timezone <= 14:
-            raise ValueError(f"Invalid timezone: {self.timezone}. "
-                             "According to UTC standard, timezones start from "
-                             "UTC-12 and end at UTC+14")
+        def parse_hour(hour: str):
+            try:
+                hour = int(hour)
+            except Exception:
+                raise ValueError(f"Invalid time format: {hour}. Expected hours")
+            return hour
+        begin = parse_hour(begin)
+        end = parse_hour(end)
+        return Schedule(timezone, begin, end)
 
-    def __parse_hour(self, hour):
-        try:
-            hour = int(hour)
-        except Exception:
-            raise ValueError(f"Invalid time format: {hour}. Expected hours")
-        if not 0 <= hour <= 24:
-            raise HoursOutOfRangeError(hour)
-        return hour
+    def __valid_timezone(self) -> bool:
+        return -12 <= self.timezone <= 14
 
     def __str__(self):
         return (f"Starting at {self.begin + self.timezone}. "
