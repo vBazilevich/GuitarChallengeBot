@@ -1,11 +1,11 @@
+import logging
+import os
+import aiogram
 from bot.userstorage.updatingnonexistingusererror import UpdatingNonExistingUserError
 from bot.userstorage.userstorage import UserStorage
 from bot.Schedule import Schedule
 from bot.MissingTokenError import MissingTokenError
 from bot.ImagesStorage import ImagesStorage, LevelDoesNotExistError
-import aiogram
-import logging
-import os
 
 
 class DailyGuitarBot:
@@ -21,85 +21,86 @@ class DailyGuitarBot:
         self.user_storage = user_storage
         self.admin_id = os.getenv("ADMIN_ID")
 
-        @self.dispatcher.message_handler(commands=["start", "help"])
-        async def send_start(message: aiogram.types.Message):
-            bot_name = (await self.bot.get_me()).full_name
-            user_name = message.from_user.full_name
-            user_id = message.from_user.id
-            if not self.user_storage.user_exists(user_id):
-                self.user_storage.create_user(user_id)
-            await message.answer(
-                f"Hello, {user_name}! My name is {bot_name}.\n\n"
-                "Right now I can't do many things but very soon "
-                "I will do the following:\n\n"
+        self.dispatcher.register_message_handler(self.send_start, commands=['start', 'help'])
+        self.dispatcher.register_message_handler(self.set_schedule, commands=['set_schedule'])
+        self.dispatcher.register_message_handler(self.my_schedule, commands=['my_schedule'])
+        self.dispatcher.register_message_handler(self.next, commands=['next'])
+        self.dispatcher.register_message_handler(self.reset, commands=['reset'])
 
-                "* Every day I will send you piece of misical score.\n"
-                "* You can play this piece using your favourite musical "
-                "instrument or sing it.\n"
-                "* You can send recording of your performance to me and\n"
-                "* I will send it to random user (I will not"
-                " mention your name or alias, no worries).\n"
-                "* This random user (if he will be generous enough) "
-                "will provide a feedback for "
-                "your performance and I will share it to you.\n"
+    async def send_start(self, message: aiogram.types.Message):
+        bot_name = (await self.bot.get_me()).full_name
+        user_name = message.from_user.full_name
+        user_id = message.from_user.id
+        if not self.user_storage.user_exists(user_id):
+            self.user_storage.create_user(user_id)
+        await message.answer(
+            f"Hello, {user_name}! My name is {bot_name}.\n\n"
+            "Right now I can't do many things but very soon "
+            "I will do the following:\n\n"
+
+            "* Every day I will send you piece of misical score.\n"
+            "* You can play this piece using your favourite musical "
+            "instrument or sing it.\n"
+            "* You can send recording of your performance to me and\n"
+            "* I will send it to random user (I will not"
+            " mention your name or alias, no worries).\n"
+            "* This random user (if he will be generous enough) "
+            "will provide a feedback for "
+            "your performance and I will share it to you.\n"
+        )
+
+    async def set_schedule(self, message: aiogram.types.Message):
+        try:
+            schedule = Schedule(message.get_args())
+            user_id = message.from_user.id
+            self.user_storage.update_user_schedule(user_id, schedule)
+            logging.debug("Registered new schedule: {schedule}")
+            await message.answer(
+                "You schedule was updated. "
+                f"Your current schedule is: {schedule}"
+            )
+        except Exception as e:
+            await message.answer(str(e))
+
+    async def my_schedule(self, message: aiogram.types.Message):
+        try:
+            schedule = self.schedule_storage[message.from_user.id]
+            await message.answer(f"Your current schedule is: {schedule}")
+        except KeyError:
+            await message.answer(
+                    "You have not chosen your schedule. "
+                    "Please, use /set_schedule commant to configure it."
             )
 
-        @self.dispatcher.message_handler(commands=["set_schedule"])
-        async def set_schedule(message: aiogram.types.Message):
-            try:
-                schedule = Schedule(message.get_args())
-                user_id = message.from_user.id
-                self.user_storage.update_user_schedule(user_id, schedule)
-                logging.debug("Registered new schedule: {schedule}")
-                await message.answer(
-                    "You schedule was updated. "
-                    f"Your current schedule is: {schedule}"
-                )
-            except Exception as e:
-                await message.answer(str(e))
+    async def next(self, message: aiogram.types.Message):
+        user_id = message.from_user.id
+        try:
+            current_level = self.user_storage.get_user_level(user_id)[0]
+            logging.debug(f"UID: {user_id} LEVEL: {current_level}")
+            image = self.images_storage.level(current_level)
+            await message.reply_photo(image)
+            self.user_storage.update_user_level(user_id)
 
-        @self.dispatcher.message_handler(commands=["my_schedule"])
-        async def my_schedule(message: aiogram.types.Message):
-            try:
-                schedule = self.schedule_storage[message.from_user.id]
-                await message.answer(f"Your current schedule is: {schedule}")
-            except KeyError:
-                await message.answer(
-                        "You have not chosen your schedule. "
-                        "Please, use /set_schedule commant to configure it."
+        except UpdatingNonExistingUserError:
+            await message.answer(
+                "You are not registered. Please, use /start command first"
+            )
+        except LevelDoesNotExistError as e:
+            await message.answer(e)
+            logging.warning("At least one user passed all levels.")
+            if self.admin_id:
+                await self.bot.send_message(
+                    self.admin_id,
+                    "One user passed all levels.",
                 )
 
-        @self.dispatcher.message_handler(commands=["next"])
-        async def next(message: aiogram.types.Message):
-            user_id = message.from_user.id
-            try:
-                current_level = self.user_storage.get_user_level(user_id)[0]
-                logging.debug(f"UID: {user_id} LEVEL: {current_level}")
-                image = self.images_storage.level(current_level)
-                await message.reply_photo(image)
-                self.user_storage.update_user_level(user_id)
-
-            except UpdatingNonExistingUserError:
-                await message.answer(
-                    "You are not registered. Please, use /start command first"
-                )
-            except LevelDoesNotExistError as e:
-                await message.answer(e)
-                logging.warn("At least one user passed all levels.")
-                if self.admin_id:
-                    await self.bot.send_message(
-                        self.admin_id,
-                        "One user passed all levels.",
-                    )
-        
-        @self.dispatcher.message_handler(commands=["reset"])
-        async def reset(message: aiogram.types.Message):
-            user_id = message.from_user.id
-            try:
-                self.user_storage.reset_user_progress(user_id)
-                await message.answer("Progress resetted successfully")
-            except KeyError:
-                await message.answer("Can't reset progress for unregistered user")
+    async def reset(self, message: aiogram.types.Message):
+        user_id = message.from_user.id
+        try:
+            self.user_storage.reset_user_progress(user_id)
+            await message.answer("Progress resetted successfully")
+        except KeyError:
+            await message.answer("Can't reset progress for unregistered user")
 
     # Starts bot
     async def start(self):
