@@ -1,3 +1,4 @@
+from bot.userstorage.accessingnonexistingusererror import AccessingNonExistingUserError
 import logging
 import psycopg2
 from bot.userstorage import MissingUserDatabaseURLError
@@ -30,6 +31,18 @@ class UserStorage:
             schedule.update(user_id, self.cursor)
         else:
             raise UpdatingNonExistingUserError(user_id)
+
+    def get_user_schedule(self, user_id: int) -> Schedule:
+        if self.user_exists(user_id):
+            self.cursor.callproc('fetch_user_time', [user_id])
+            schedule = self.cursor.fetchone()
+            print(schedule)
+            timezone, begin, end = schedule
+            result = Schedule(timezone, begin, end)
+            print(result)
+            return result
+        else:
+            raise AccessingNonExistingUserError(user_id)
 
     def get_user_level(self, user_id: int):
         if self.user_exists(user_id):

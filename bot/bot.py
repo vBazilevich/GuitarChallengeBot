@@ -64,7 +64,7 @@ class DailyGuitarBot:
 
     async def my_schedule(self, message: aiogram.types.Message):
         try:
-            schedule = self.schedule_storage[message.from_user.id]
+            schedule = self.user_storage.get_user_schedule(message.from_user.id)
             await message.answer(f"Your current schedule is: {schedule}")
         except KeyError:
             await message.answer(
