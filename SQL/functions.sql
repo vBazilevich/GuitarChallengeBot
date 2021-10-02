@@ -64,6 +64,22 @@ CREATE FUNCTION set_user_active(
 	END;
 	$$;
 
+CREATE OR REPLACE FUNCTION fetch_user_time(
+    arg_user_id integer
+    )
+    RETURNS TABLE(timezone integer, t_start integer, t_end integer)
+    LANGUAGE plpgsql
+    AS
+    $$
+    BEGIN
+        RETURN QUERY
+        SELECT gmt, time_interval_start, time_interval_end
+        FROM bot_user
+        WHERE user_id = arg_user_id
+        LIMIT 1;
+    END;
+    $$;
+
 CREATE FUNCTION update_user_time(
 	arg_user_id integer,
 	arg_gmt integer,
