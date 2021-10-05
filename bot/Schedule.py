@@ -39,7 +39,7 @@ class Schedule:
             raise StartAfterEndError
 
     @staticmethod
-    def from_string(schedule : str):
+    def from_string(schedule: str):
         if not schedule:
             raise WrongScheduleFormat
         if not schedule.startswith("UTC"):
@@ -55,6 +55,7 @@ class Schedule:
             timezone = int(timezone)
         except Exception:
             raise ValueError(f"Invalid timezone: {timezone}")
+
         def parse_hour(hour: str):
             try:
                 hour = int(hour)
@@ -73,4 +74,4 @@ class Schedule:
                 f"Finishing at {self.end + self.timezone}.")
 
     def update(self, user_id, cursor: psycopg2.extensions.cursor):
-        cursor.callproc('update_user_time', [user_id, self.timezone, self.begin, self.end,])
+        cursor.callproc('update_user_time', [user_id, self.timezone, self.begin, self.end, ])

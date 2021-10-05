@@ -17,7 +17,7 @@ class UserStorage:
         self.cursor = self.conn.cursor()
 
     def create_user(self, user_id: int):
-        self.cursor.callproc('create_user', [user_id, 1, "active", 0, 10, 18,])
+        self.cursor.callproc('create_user', [user_id, 1, "active", 0, 10, 18, ])
         self.cursor.fetchone()
 
     def user_exists(self, user_id: int):
