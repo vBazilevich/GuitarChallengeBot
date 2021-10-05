@@ -2,6 +2,7 @@ import pytest
 import os
 from bot.imagesstorage import ImagesStorage, LevelDoesNotExistError, MissingMongoDBClient
 
+
 class MockCollection:
     def __init__(self, data):
         self.data = data
@@ -18,6 +19,7 @@ class MockCollection:
 def mock_db_empty():
     return {"images-storage": {"images": MockCollection([])}}
 
+
 @pytest.fixture
 def mock_db():
     level_one = {
@@ -27,10 +29,11 @@ def mock_db():
                 }
     return {"images-storage": {"images": MockCollection([level_one])}}
 
+
 class TestImagesStorage:
     def test_panics_without_mongodb_link(self):
         with pytest.raises(MissingMongoDBClient):
-            storage = ImagesStorage(None)
+            ImagesStorage(None)
 
     def test_panics_when_there_are_no_more_levels(self, mock_db_empty):
         storage = ImagesStorage(mock_db_empty)
