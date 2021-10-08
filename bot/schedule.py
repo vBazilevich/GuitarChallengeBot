@@ -72,19 +72,19 @@ class Schedule:
         schedule.removeprefix("UTC")
         try:
             timezone, begin, end = schedule.split(" ", maxsplit=2)
-        except Exception:
-            raise WrongScheduleFormat
+        except Exception as e:
+            raise WrongScheduleFormat from e
         timezone = timezone.removeprefix("UTC")
         try:
             timezone = int(timezone)
-        except Exception:
-            raise ValueError(f"Invalid timezone: {timezone}")
+        except Exception as e:
+            raise ValueError(f"Invalid timezone: {timezone}") from e
 
         def parse_hour(hour: str):
             try:
                 hour = int(hour)
-            except Exception:
-                raise ValueError(f"Invalid time format: {hour}. Expected hours")
+            except Exception as e:
+                raise ValueError(f"Invalid time format: {hour}. Expected hours") from e
             return hour
         begin = parse_hour(begin)
         end = parse_hour(end)
