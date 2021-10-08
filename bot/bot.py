@@ -3,8 +3,8 @@ import os
 import aiogram
 from bot.userstorage.updatingnonexistingusererror import UpdatingNonExistingUserError
 from bot.userstorage.userstorage import UserStorage
-from bot.Schedule import Schedule
-from bot.MissingTokenError import MissingTokenError
+from bot.schedule import Schedule
+from bot.missingtokenerror import MissingTokenError
 from bot.imagesstorage import ImagesStorage, LevelDoesNotExistError
 
 
