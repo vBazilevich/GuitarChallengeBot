@@ -4,14 +4,23 @@ import aiogram
 from bot.userstorage.updatingnonexistingusererror import UpdatingNonExistingUserError
 from bot.userstorage.userstorage import UserStorage
 from bot.schedule import Schedule
+from bot.schedule import HoursOutOfRangeError, StartAfterEndError, WrongScheduleFormat
 from bot.missingtokenerror import MissingTokenError
 from bot.imagesstorage import ImagesStorage, LevelDoesNotExistError
 
 
 class DailyGuitarBot:
-    schedule_storage = {}
-
-    def __init__(self, token, images_storage: ImagesStorage, user_storage: UserStorage):
+    """
+    Implements main Bot logic
+    """
+    def __init__(self, token: str, images_storage: ImagesStorage, user_storage: UserStorage):
+        """
+        :param token: Telegram API token
+        :param images_storage: ImagesStorage object containing music scores
+        :param user_storage: UserStorage object that stores and manages information about users
+        :raises:
+            MissingTokenError: no telegram token provided
+        """
         if token is None:
             raise MissingTokenError("Telegram API token passed "
                                     "to bot class is None")
@@ -28,6 +37,10 @@ class DailyGuitarBot:
         self.dispatcher.register_message_handler(self.reset, commands=['reset'])
 
     async def send_start(self, message: aiogram.types.Message):
+        """
+        Handles /start command
+        :param message: message from user
+        """
         bot_name = (await self.bot.get_me()).full_name
         user_name = message.from_user.full_name
         user_id = message.from_user.id
@@ -50,6 +63,10 @@ class DailyGuitarBot:
         )
 
     async def set_schedule(self, message: aiogram.types.Message):
+        """
+        Handles /set_schedule command - updates user schedule
+        :param message: message from user
+        """
         try:
             schedule = Schedule.from_string(message.get_args())
             user_id = message.from_user.id
@@ -59,10 +76,14 @@ class DailyGuitarBot:
                 "You schedule was updated. "
                 f"Your current schedule is: {schedule}"
             )
-        except Exception as e:
+        except (ValueError, WrongScheduleFormat, HoursOutOfRangeError, StartAfterEndError) as e:
             await message.answer(str(e))
 
     async def my_schedule(self, message: aiogram.types.Message):
+        """
+        Handles /my_schedule command - sends to user his or her current schedule
+        :param message: message from user
+        """
         try:
             schedule = self.user_storage.get_user_schedule(message.from_user.id)
             await message.answer(f"Your current schedule is: {schedule}")
@@ -73,6 +94,9 @@ class DailyGuitarBot:
             )
 
     async def next(self, message: aiogram.types.Message):
+        """
+        Handles /next command - sends next level to user
+        """
         user_id = message.from_user.id
         try:
             current_level = self.user_storage.get_user_level(user_id)[0]
@@ -95,6 +119,9 @@ class DailyGuitarBot:
                 )
 
     async def reset(self, message: aiogram.types.Message):
+        """
+        Handles /reset command - return user to level 1
+        """
         user_id = message.from_user.id
         try:
             self.user_storage.reset_user_progress(user_id)
@@ -102,7 +129,9 @@ class DailyGuitarBot:
         except KeyError:
             await message.answer("Can't reset progress for unregistered user")
 
-    # Starts bot
     async def start(self):
+        """
+        Starts the bot
+        """
         logging.info("Starting bot...")
         await self.dispatcher.start_polling()
