@@ -22,10 +22,20 @@ class HoursOutOfRangeError(Exception):
         super().__init__(self.message)
 
 
-# Works with schedule in format
-# UTC<UTC time zone> <start> <end>
 class Schedule:
+    """
+    This class represents user-defined schedule
+    """
     def __init__(self, timezone: int, begin: int, end: int):
+        """
+        :param timezone: Users timezone
+        :param begin: hour when user starts practice (in user local time)
+        :param end: hour when user ends practice (in user local time)
+        :raises:
+            HoursOutOfRangeError: given begin or end lies out of [0, 24] interval
+            ValueError: provided timezone is not a valid UTC timezone
+            StartAfterEndError: begin is after the end of the practice
+        """
         self.timezone = timezone
         if not 0 <= begin <= 24:
             raise HoursOutOfRangeError(begin)
@@ -40,6 +50,20 @@ class Schedule:
 
     @staticmethod
     def from_string(schedule: str):
+        """
+        Builds Schedule object from the string of following format:
+            UTC<timezone> <begin> <end>
+        Where:
+            <timezone> - valid UTC timezone number
+            <begin> - beginning hour
+            <end> - ending hour
+
+        :param schedule: string representing schedule
+        :returns: Schedule corresponding to a given string
+        :raises:
+            WrongScheduleFormat: schedule format is violated
+            ValueError: Given <begin> or <end> can not be converted to integer
+        """
         if not schedule:
             raise WrongScheduleFormat
         if not schedule.startswith("UTC"):
@@ -67,11 +91,22 @@ class Schedule:
         return Schedule(timezone, begin, end)
 
     def __valid_timezone(self) -> bool:
+        """
+        Checks if Schedule object stores valid timezone
+        """
         return -12 <= self.timezone <= 14
 
     def __str__(self):
+        """
+        Represent schedule as a string
+        """
         return (f"Starting at {self.begin + self.timezone}. "
                 f"Finishing at {self.end + self.timezone}.")
 
-    def update(self, user_id, cursor: psycopg2.extensions.cursor):
+    def update(self, user_id: int, cursor: psycopg2.extensions.cursor):
+        """
+        Save schedule to database
+        :param user_id: Telegram UserID whose schedule is being updated
+        :param cursor: PostgreSQL client used to save schedule
+        """
         cursor.callproc('update_user_time', [user_id, self.timezone, self.begin, self.end, ])
