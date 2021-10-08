@@ -3,7 +3,7 @@ import psycopg2
 from bot.userstorage import MissingUserDatabaseURLError
 from bot.userstorage import UpdatingNonExistingUserError
 from bot.userstorage.accessingnonexistingusererror import AccessingNonExistingUserError
-from bot.Schedule import Schedule
+from bot.schedule import Schedule
 
 
 class UserStorage:
