@@ -1,4 +1,4 @@
-from bot.MissingTokenError import MissingTokenError
+from bot.missingtokenerror import MissingTokenError
 from bot.bot import DailyGuitarBot
 import pytest
 

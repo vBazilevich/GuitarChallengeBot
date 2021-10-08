@@ -1,4 +1,4 @@
-from bot.Schedule import (HoursOutOfRangeError, Schedule,
+from bot.schedule import (HoursOutOfRangeError, Schedule,
                           StartAfterEndError, WrongScheduleFormat)
 import pytest
 
