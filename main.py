@@ -5,7 +5,7 @@ import logging
 import sys
 import pymongo
 from bot.bot import DailyGuitarBot
-from bot.ImagesStorage import ImagesStorage
+from bot.imagesstorage import ImagesStorage
 
 logging.basicConfig(level=logging.INFO)
 
