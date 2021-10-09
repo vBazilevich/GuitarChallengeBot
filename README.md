@@ -23,8 +23,11 @@ A telegram bot that sends music scores to all users daily. Users can submit thei
 -   approve that the music sample is exactly the melody as in the scores
 -   give a numerical score for that sample
 
-![img](https://drive.google.com/file/d/1qUiB97G5JKhsPkqO1zy5nbC7le_TXio7/view?usp=sharing)
+### Prototype
+<a href="https://drive.google.com/uc?export=view&id=1_HbWgJC8N9uG0up55KtlgCgyw-OiMW9W"><img src="https://drive.google.com/uc?export=view&id=1_HbWgJC8N9uG0up55KtlgCgyw-OiMW9W" style="width: 650px; max-width: 100%; height: auto" title="Click to enlarge picture" />
 
+### Demonstration
+<a href="https://drive.google.com/uc?export=view&id=1Rho8Inz6bj0ZEgIZaDASU0FRtWHnEu1s"><img src="https://drive.google.com/uc?export=view&id=1Rho8Inz6bj0ZEgIZaDASU0FRtWHnEu1s" style="width:320px; height: auto" title="Click to enlarge picture" />
 
 ### What problems it solves
 This project is an opportunity to put knowledge into practice. A person is immersed in an environment of people with common interests, which helps to quickly implement new knowledge, try things out, and see immediate results and feedback from the community.
