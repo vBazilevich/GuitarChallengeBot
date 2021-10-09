@@ -55,7 +55,7 @@ class DailyGuitarBot:
                 "Here is the list of all supported commands:\n"
                 "/start - register as a new user. Get description of the bot\n"
                 "/set_schedule - set time interval when you can be asked for a review\n"
-                "/my_schedule - check your current review schedule\n"
+                "/my_schedule - check your current schedule\n"
                 "/next - proceed to the next level\n"
                 "/reset - reset your current progress\n"
                 "/help - read this help message")
