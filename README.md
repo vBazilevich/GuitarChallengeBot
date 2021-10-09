@@ -44,6 +44,7 @@ This project is an opportunity to put knowledge into practice. A person is immer
 
 ### Competitors
 **Direct:** @easyguitarbot.
+
 **Indirect:** @vocalolklipp, @iLyricsBot
 
 ### Potential Client (Business owner)
