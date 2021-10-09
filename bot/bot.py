@@ -21,7 +21,8 @@ class DailyGuitarBot:
         self.user_storage = user_storage
         self.admin_id = os.getenv("ADMIN_ID")
 
-        self.dispatcher.register_message_handler(self.send_start, commands=['start', 'help'])
+        self.dispatcher.register_message_handler(self.send_start, commands=['start'])
+        self.dispatcher.register_message_handler(self.help, commands=["help"])
         self.dispatcher.register_message_handler(self.set_schedule, commands=['set_schedule'])
         self.dispatcher.register_message_handler(self.my_schedule, commands=['my_schedule'])
         self.dispatcher.register_message_handler(self.next, commands=['next'])
@@ -48,6 +49,16 @@ class DailyGuitarBot:
             "will provide a feedback for "
             "your performance and I will share it to you.\n"
         )
+
+    async def help(self, message: aiogram.types.Message):
+        await message.answer(
+                "Here is the list of all supported commands:\n"
+                "/start - register as a new user. Get description of the bot\n"
+                "/set_schedule - set time interval when you can be asked for a review\n"
+                "/my_schedule - check your current schedule\n"
+                "/next - proceed to the next level\n"
+                "/reset - reset your current progress\n"
+                "/help - read this help message")
 
     async def set_schedule(self, message: aiogram.types.Message):
         try:
