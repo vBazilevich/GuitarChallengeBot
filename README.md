@@ -40,7 +40,7 @@ This project is an opportunity to put knowledge into practice. A person is immer
 -   Subscription free
 -   Get modern and actual music scores
 -   In time feedback from people with the same interests
--   Random tracks from multiple genres, so the learning is never boring.
+-   Random tracks from multiple genres, so the learning is never boring
 
 ### Competitors
 **Direct:** @easyguitarbot.
@@ -50,7 +50,7 @@ This project is an opportunity to put knowledge into practice. A person is immer
 ### Potential Client (Business owner)
 -   Organizers of *festivals*, *forums* where people come for the training program. They can use the bot as an extension of further interaction between forum participants.
 
--   Owners of *guitar training schools* (offline/online) where a person has a systematic business and can share a bot as a way of attracting new customers (not even that: give access to old students and they will just show their surroundings)
+-   Owners of *guitar training schools* (offline/online) where a person has a systematic business and can share a bot as a way of attracting new customers (not even that: give access to old students and they will just show their surroundings).
 
 <a id="bus"></a>
 ##  **Business Goals and Objectives**
@@ -63,14 +63,14 @@ This project is an opportunity to put knowledge into practice. A person is immer
 
 - We want the platform to provide daily challenges and engage the user to improve their learning and practicing.
 
-- We want the platform to be a telegram-bot
+- We want the platform to be a telegram-bot.
 
 <a id="usage"></a>
 ## Use process
 1. Start the bot via */start* command
 2. Use */help* command to get a list of commands with their description
-3. Setup your schedule via */set_schedule* command. Schedule defines the time bot can send you messages. 
-4. Check your schedule via *my_schedule* command
+3. Setup your schedule via */set_schedule* command. Schedule defines the time bot can send you messages
+4. Check your schedule via */my_schedule* command
 5. Get the new song score (notes) as a challenge via */next* command
 6. Play a song and record it as an audio message
 7. Get a full song name, after the audio recording is send 
@@ -110,7 +110,6 @@ All development documentation can be found [here](https://drive.google.com/drive
 - Non-functional requirements
 - Software Development plan
 - Constraints
-- Software development plan
 - System architecture
 
 <a id="howto"></a>
@@ -125,12 +124,12 @@ All development documentation can be found [here](https://drive.google.com/drive
 7. Register PostgreSQL functions using command:
  `heroku pg:psql -a <your-heroku-app-name> -f SQL/functions.sql`
 9. Upload your scores using this [tool](https://github.com/vBazilevich/GuitarChallengeBot-scoresManagement) 
-10. Go to your Heroku application and setup auto-deploy from the master branch of your fork.
+10. Go to your Heroku application and setup auto-deploy from the master branch of your fork
 11. Activate the dyno
 
 ### Environment variables explained
 Obligatory environment variables:
-* `TELEGRAM_API_TOKEN` - your bots' token. Here you can find detailed instructions on how to create a bot via a [link](https://core.telegram.org/bots#6-botfather)
+* `TELEGRAM_API_TOKEN` - your bots' token. Here you can find detailed instructions on how to create a bot via a [link](https://core.telegram.org/bots#6-botfather).
 * `MONGO_URL` - link to your MongoDB cluster. You can find it in connection settings of your cluster.
 
 Environment variables required for running the bot locally:
@@ -139,7 +138,7 @@ on your machine when you are running it locally.
 
 Optional environment variables:
 * `ADMIN_ID` - Telegram User ID that you can set up if you want to be notified on some events (for example, when one of the users has
-finished all levels)
+finished all levels).
 
 <a id="tech"></a>
 ## Technical Stack
@@ -148,7 +147,7 @@ Programming languages **- Python**
 
 Databases **- postgreSQL, MongoDB**
 
-Cloud CI platform **- Heroku.**
+Cloud CI platform **- Heroku**
 
 <a id="design"></a>
 ## Design Decisions
